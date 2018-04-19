@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".login.LoginActivity">
+    tools:context=".Controller.LoginActivity">
 
     <EditText
-        android:id="@+id/loginEmailTv"
+        android:id="@+id/loginEmailEdt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/loginPasswordTv"
+        android:id="@+id/loginPasswordEdt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -32,7 +32,7 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginEmailTv" />
+        app:layout_constraintTop_toBottomOf="@+id/loginEmailEdt" />
 
     <Button
         android:id="@+id/loginLoginBtn"
@@ -47,7 +47,7 @@
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginPasswordTv" />
+        app:layout_constraintTop_toBottomOf="@+id/loginPasswordEdt" />
 
     <TextView
         android:id="@+id/textView2"

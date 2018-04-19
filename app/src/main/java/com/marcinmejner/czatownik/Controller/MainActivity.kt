@@ -1,4 +1,4 @@
-package com.marcinmejner.czatownik.Home
+package com.marcinmejner.czatownik.Controller
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.marcinmejner.czatownik.R
-import com.marcinmejner.czatownik.login.LoginActivity
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
