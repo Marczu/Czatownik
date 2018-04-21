@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.marcinmejner.czatownik.R
+import com.marcinmejner.czatownik.R.id.loginEmailEdt
+import com.marcinmejner.czatownik.R.id.loginPasswordEdt
 import com.marcinmejner.czatownik.Services.AuthService
 import kotlinx.android.synthetic.main.activity_create_user.*
 import kotlinx.android.synthetic.main.activity_login.*
@@ -21,6 +23,7 @@ class LoginActivity : AppCompatActivity() {
     fun loginCreateNewUserBtnClicked(view: View){
         val intent = Intent(this, CreateUserActivity::class.java)
         startActivity(intent)
+        finish()
 
     }
 
@@ -35,6 +38,7 @@ class LoginActivity : AppCompatActivity() {
 
             }
         }
+
 
     }
 }
