@@ -13,7 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.marcinmejner.czatownik.R
-import com.marcinmejner.czatownik.R.id.userNameNavHeader
+import com.marcinmejner.czatownik.R.id.*
 import com.marcinmejner.czatownik.Services.AuthService
 import com.marcinmejner.czatownik.Services.UserDataService
 import com.marcinmejner.czatownik.Utils.BROADCAST_USER_DATA_CHANGE
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         if (AuthService.isLoggedIn) {
             //Logout
             UserDataService.logout()
-            userNameNavHeader.text = "Login"
+            userNameNavHeader.text = ""
             userEmailNavHeader.text = ""
             userImageNavHeader.setImageResource(R.drawable.profiledefault)
             userImageNavHeader.setBackgroundColor(Color.TRANSPARENT)
