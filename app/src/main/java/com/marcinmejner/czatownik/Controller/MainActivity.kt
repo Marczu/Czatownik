@@ -63,23 +63,13 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
     }
 
-    override fun onPause() {
-        super.onPause()
-//      if(MessageService.channels.size >0) {
-//          Log.d(TAG, "onPause: ${MessageService.channels[0]}")
-//
-//          MessageService.channels.clear()
-//
-//          Log.d(TAG, "onPause: usuniecie elementu")
-//      }
-    }
+
 
 
     override fun onResume() {
 
         LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReciver, IntentFilter(BROADCAST_USER_DATA_CHANGE))
         channelAdapter.notifyDataSetChanged()
-        Log.d(TAG, "onResume: ${MessageService.channels.size}")
         super.onResume()
     }
 
