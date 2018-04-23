@@ -20,12 +20,16 @@ import com.marcinmejner.czatownik.R.id.*
 import com.marcinmejner.czatownik.Services.AuthService
 import com.marcinmejner.czatownik.Services.UserDataService
 import com.marcinmejner.czatownik.Utils.BROADCAST_USER_DATA_CHANGE
+import com.marcinmejner.czatownik.Utils.SOCKET_URL
+import io.socket.client.IO
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    val socket = IO.socket(SOCKET_URL)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +43,23 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
 
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReciver, IntentFilter(BROADCAST_USER_DATA_CHANGE))
+    }
 
+
+    override fun onResume() {
+        socket.connect()
+        LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReciver, IntentFilter(BROADCAST_USER_DATA_CHANGE))
+        super.onResume()
+    }
+
+    override fun onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(userDataChangeReciver)
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        socket.disconnect()
+        super.onDestroy()
     }
 
     private val userDataChangeReciver = object : BroadcastReceiver() {
@@ -80,12 +99,10 @@ class MainActivity : AppCompatActivity() {
                         userImageNavHeader.setBackgroundColor(Color.TRANSPARENT)
                         loginBtnNavHeader.text = "Login"
 
-                        val intent = Intent(MainActivity@this, LoginActivity::class.java)
+                        val intent = Intent(MainActivity@ this, LoginActivity::class.java)
                         startActivity(intent)
-
                     }
                     .setNegativeButton("No") { dialogInterface, i ->
-
                     }
                     .show()
         } else {
@@ -109,12 +126,13 @@ class MainActivity : AppCompatActivity() {
                         val channelDesc = descriptionEdt.text.toString()
 
                         //tworzymy kanal z nazwą i opisem
+                        socket.emit("newChannel", channelName, channelDesc)
                     }
                     .setNegativeButton("Cancel") { dialogInterface, i ->
-
-
                     }
                     .show()
+
+
         }
 
 
