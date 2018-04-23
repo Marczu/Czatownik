@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="25sp">
+
+    <TextView
+        android:textColor="@color/primary_text"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp"
+        android:id="@+id/dialogAddChannelTv"
+        android:text="Add Channel"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/dialogAddChannelName"
+        android:layout_below="@+id/dialogAddChannelTv"
+        android:hint="Channel name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:layout_below="@+id/dialogAddChannelName"
+        android:id="@+id/dialogChannelDescription"
+        android:hint="Channel description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>

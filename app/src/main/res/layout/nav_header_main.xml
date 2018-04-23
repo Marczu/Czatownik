@@ -53,7 +53,7 @@
         android:layout_height="32dp"
         android:layout_marginBottom="16dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/white_rounded_button"
+        android:background="@drawable/rounded_button"
         android:onClick="loginBtnNavClicked"
         android:text="Login"
         app:layout_constraintBottom_toBottomOf="parent"
