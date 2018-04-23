@@ -51,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
                             errorToast()
                         }
                     }
-                    Log.d(TAG, "Token: ${AuthService.authToken}  Email: ${AuthService.userEmail} ")
+                    Log.d(TAG, "Token: ${App.prefs.authToken}  Email: ${App.prefs.userEmail} ")
 
                 }else{
                     errorToast()

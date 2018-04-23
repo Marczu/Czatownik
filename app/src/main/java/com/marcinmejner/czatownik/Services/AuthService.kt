@@ -8,6 +8,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.marcinmejner.czatownik.Controller.App
 import com.marcinmejner.czatownik.Utils.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -15,9 +16,9 @@ import org.json.JSONObject
 object AuthService {
     private val TAG = "AuthService"
 
-    var isLoggedIn = false
-    var userEmail = ""
-    var authToken = ""
+//    var isLoggedIn = false
+//    var userEmail = ""
+//    var authToken = ""
 
 
     /*Rejestrujemy nowego usera*/
@@ -43,7 +44,7 @@ object AuthService {
                 return requestBody.toByteArray()
             }
         }
-        Volley.newRequestQueue(context).add(registerRequest)
+       App.prefs.requestQueue.add(registerRequest)
     }
 
     /*Logowanie usera*/
@@ -58,9 +59,9 @@ object AuthService {
         val loginRequest = object : JsonObjectRequest(Method.POST, URL_LOGIN, null, Response.Listener { response ->
 
             try {
-                authToken = response.getString("token")
-                userEmail = response.getString("user")
-                isLoggedIn = true
+                App.prefs.authToken = response.getString("token")
+                App.prefs.userEmail = response.getString("user")
+                App.prefs.isLoggedIn = true
                 complete(true)
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -122,7 +123,7 @@ object AuthService {
 
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                headers.put("Authorization", "Bearer $authToken")
+                headers.put("Authorization", "Bearer ${ App.prefs.authToken}")
                 return headers
             }
         }
@@ -131,7 +132,7 @@ object AuthService {
     }
 
     fun findUserByEmail(context: Context, complete: (Boolean) -> Unit){
-        val findUserRequest = object : JsonObjectRequest(Method.GET, "$URL_GEY_USER$userEmail", null, Response.Listener {response ->
+        val findUserRequest = object : JsonObjectRequest(Method.GET, "$URL_GEY_USER${App.prefs.userEmail}", null, Response.Listener {response ->
 
             try{
                 UserDataService.name = response.getString("name")
@@ -158,7 +159,7 @@ object AuthService {
 
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                headers.put("Authorization", "Bearer $authToken")
+                headers.put("Authorization", "Bearer ${ App.prefs.authToken}")
                 return headers
             }
         }

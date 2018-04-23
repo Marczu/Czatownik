@@ -74,7 +74,7 @@ class CreateUserActivity : AppCompatActivity() {
                     Log.d(TAG, "Utworzenie nowego usera powiodłosię: " + registerSuccess.toString())
                     AuthService.loginUser(this, email, password) {loginSuccess ->
                         if(loginSuccess){
-                            Log.d(TAG, "Token: ${AuthService.authToken}  Email: ${AuthService.userEmail} ")
+                            Log.d(TAG, "Token: ${App.prefs.authToken}  Email: ${App.prefs.userEmail} ")
                             AuthService.createUser(this, userName, email, userAvatar, avatarColor) {createSucces ->
                                 if(createSucces){
 
