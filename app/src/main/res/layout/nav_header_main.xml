@@ -16,7 +16,7 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         app:layout_constraintBottom_toTopOf="@+id/loginBtnNavHeader"
@@ -25,17 +25,19 @@
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/profiledefault" />
 
+
+
     <TextView
         android:id="@+id/userNameNavHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Marcc"
+        android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintStart_toEndOf="@+id/userImageNavHeader"
         app:layout_constraintTop_toTopOf="@+id/userImageNavHeader"
-        tools:text="Marcc" />
+         />
 
     <TextView
         android:id="@+id/userEmailNavHeader"
@@ -45,7 +47,7 @@
         android:text="marcc@gmail.com"
         app:layout_constraintStart_toEndOf="@+id/userImageNavHeader"
         app:layout_constraintTop_toBottomOf="@+id/userNameNavHeader"
-        tools:text="marcc@gmail.com" />
+        tools:text="" />
 
     <Button
         android:id="@+id/loginBtnNavHeader"
@@ -58,6 +60,8 @@
         android:text="Login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
 
     <ImageButton
         android:id="@+id/addChannelBtn"

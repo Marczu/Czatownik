@@ -6,21 +6,27 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v4.content.LocalBroadcastManager
 
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import com.marcinmejner.czatownik.Model.Channel
 import com.marcinmejner.czatownik.R
 import com.marcinmejner.czatownik.R.id.*
 import com.marcinmejner.czatownik.Services.AuthService
+import com.marcinmejner.czatownik.Services.MessageService
 import com.marcinmejner.czatownik.Services.UserDataService
 import com.marcinmejner.czatownik.Utils.BROADCAST_USER_DATA_CHANGE
 import com.marcinmejner.czatownik.Utils.SOCKET_URL
+import io.reactivex.Emitter
 import io.socket.client.IO
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,39 +34,62 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.*
 
 class MainActivity : AppCompatActivity() {
+    private val TAG = "MainActivity"
 
     val socket = IO.socket(SOCKET_URL)
+
+    lateinit var channelAdapter: ArrayAdapter<Channel>
+
+    private fun setupAdapters(){
+        channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.channels)
+        channel_list.adapter = channelAdapter
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate: start")
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        socket.connect()
+        socket.on("channelCreated", onNewChannel)
+
+        setupAdapters()
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
+    }
 
-
+    override fun onPause() {
+        super.onPause()
+//      if(MessageService.channels.size >0) {
+//          Log.d(TAG, "onPause: ${MessageService.channels[0]}")
+//
+//          MessageService.channels.clear()
+//
+//          Log.d(TAG, "onPause: usuniecie elementu")
+//      }
     }
 
 
     override fun onResume() {
-        socket.connect()
-        LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReciver, IntentFilter(BROADCAST_USER_DATA_CHANGE))
-        super.onResume()
-    }
 
-    override fun onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(userDataChangeReciver)
-        super.onPause()
+        LocalBroadcastManager.getInstance(this).registerReceiver(userDataChangeReciver, IntentFilter(BROADCAST_USER_DATA_CHANGE))
+        channelAdapter.notifyDataSetChanged()
+        Log.d(TAG, "onResume: ${MessageService.channels.size}")
+        super.onResume()
     }
 
     override fun onDestroy() {
         socket.disconnect()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(userDataChangeReciver)
         super.onDestroy()
     }
+
+
 
     private val userDataChangeReciver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
@@ -71,6 +100,12 @@ class MainActivity : AppCompatActivity() {
                 userImageNavHeader.setImageResource(resourceId)
                 userImageNavHeader.setBackgroundColor(UserDataService.returnAvatarColor(UserDataService.avatarColor))
                 loginBtnNavHeader.text = "Logout"
+
+                MessageService.getChannels(context) {complete ->
+                    if(complete){
+                        channelAdapter.notifyDataSetChanged()
+                    }
+                }
             }
         }
     }
@@ -131,11 +166,22 @@ class MainActivity : AppCompatActivity() {
                     .setNegativeButton("Cancel") { dialogInterface, i ->
                     }
                     .show()
+        }
+    }
 
+    private val onNewChannel = io.socket.emitter.Emitter.Listener {args ->
+        runOnUiThread{
+            val channelName = args[0] as String
+            val channelDesc = args[1] as String
+            val channelId = args[2] as String
+
+            val newChannel = Channel(channelName, channelDesc, channelId)
+            MessageService.channels.add(newChannel)
+            Log.d(TAG, "${newChannel.name} ${newChannel.description} ${newChannel.id}")
+
+            channelAdapter.notifyDataSetChanged()
 
         }
-
-
     }
 
     fun sendMessageBtnClicked(view: View) {
