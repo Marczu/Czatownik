@@ -16,10 +16,6 @@ import org.json.JSONObject
 object AuthService {
     private val TAG = "AuthService"
 
-//    var isLoggedIn = false
-//    var userEmail = ""
-//    var authToken = ""
-
 
     /*Rejestrujemy nowego usera*/
     fun registerUser(context: Context, email: String, passowrd: String, complete: (Boolean) -> Unit) {
@@ -44,7 +40,7 @@ object AuthService {
                 return requestBody.toByteArray()
             }
         }
-       App.prefs.requestQueue.add(registerRequest)
+        App.prefs.requestQueue.add(registerRequest)
     }
 
     /*Logowanie usera*/
@@ -81,7 +77,7 @@ object AuthService {
                 return requestBody.toByteArray()
             }
         }
-        Volley.newRequestQueue(context).add(loginRequest)
+        App.prefs.requestQueue.add(loginRequest)
     }
 
     /*Tworzenie Usera*/
@@ -127,7 +123,7 @@ object AuthService {
                 return headers
             }
         }
-        Volley.newRequestQueue(context).add(createRequest)
+        App.prefs.requestQueue.add(createRequest)
 
     }
 
@@ -164,7 +160,7 @@ object AuthService {
             }
         }
 
-        Volley.newRequestQueue(context).add(findUserRequest)
+        App.prefs.requestQueue.add(findUserRequest)
     }
 
 }
