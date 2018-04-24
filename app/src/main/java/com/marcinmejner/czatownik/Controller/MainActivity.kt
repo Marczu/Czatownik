@@ -12,14 +12,17 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import com.marcinmejner.czatownik.Adapters.MessageAdapter
 import com.marcinmejner.czatownik.Model.Channel
 import com.marcinmejner.czatownik.Model.Message
 import com.marcinmejner.czatownik.R
+import com.marcinmejner.czatownik.R.id.channel_list
 import com.marcinmejner.czatownik.Services.AuthService
 import com.marcinmejner.czatownik.Services.MessageService
 import com.marcinmejner.czatownik.Services.UserDataService
@@ -38,11 +41,18 @@ class MainActivity : AppCompatActivity() {
     val socket = IO.socket(SOCKET_URL)
 
     lateinit var channelAdapter: ArrayAdapter<Channel>
+    lateinit var messageAdapter: MessageAdapter
     var selectedChannel: Channel? = null
+
 
     private fun setupAdapters() {
         channelAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MessageService.channels)
         channel_list.adapter = channelAdapter
+
+        messageAdapter = MessageAdapter(this, MessageService.messages)
+        messageListView.adapter = messageAdapter
+        val layoutManager = LinearLayoutManager(this)
+        messageListView.layoutManager = layoutManager
     }
 
 
@@ -56,12 +66,13 @@ class MainActivity : AppCompatActivity() {
         socket.on("channelCreated", onNewChannel)
         socket.on("messageCreated", onNewMessage)
 
-        setupAdapters()
+
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
+        setupAdapters()
 
         channel_list.setOnItemClickListener { _, _, i, _ ->
             selectedChannel = MessageService.channels[i]
@@ -114,11 +125,17 @@ class MainActivity : AppCompatActivity() {
 
     fun updateWithChannel() {
         mainChannelName.text = "#${selectedChannel?.name}"
-        if(selectedChannel != null) {
-            MessageService.getMessages(selectedChannel!!.id) {complete ->
-                if(complete){
+        if (selectedChannel != null) {
+            MessageService.getMessages(selectedChannel!!.id) { complete ->
+                if (complete) {
+
                     for(message in MessageService.messages)
                         Log.d(TAG, "updateWithChannel: ${message.message}")
+
+                    messageAdapter.notifyDataSetChanged()
+                    if(messageAdapter.itemCount > 0){
+                        messageListView.smoothScrollToPosition(messageAdapter.itemCount - 1)
+                    }
                 }
             }
         }
@@ -143,6 +160,8 @@ class MainActivity : AppCompatActivity() {
                     .setPositiveButton("Yes") { dialogInterface, i ->
                         //Logout
                         UserDataService.logout()
+                        channelAdapter.notifyDataSetChanged()
+                        messageAdapter.notifyDataSetChanged()
                         userNameNavHeader.text = ""
                         userEmailNavHeader.text = ""
                         userImageNavHeader.setImageResource(R.drawable.profiledefault)
@@ -217,6 +236,8 @@ class MainActivity : AppCompatActivity() {
 
                     val newMessage = Message(msgBody, userName, channelId, userAvatar, userAvatarColor, id, timeStamps)
                     MessageService.messages.add(newMessage)
+                    messageAdapter.notifyDataSetChanged()
+                    messageListView.smoothScrollToPosition(messageAdapter.itemCount - 1)
                 }
             }
         }

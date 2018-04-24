@@ -38,7 +38,8 @@ object MessageService {
                 complete(true)
 
             } catch (e: JSONException) {
-                Log.d(TAG, "getChannels: ${e.localizedMessage}")
+                Log.d("JSON", "EXC:" + e.localizedMessage)
+                complete(false)
             }
 
         }, Response.ErrorListener { error ->
